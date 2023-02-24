@@ -71,8 +71,9 @@ output as many thoughts are are relevant to the input:
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: center;
-                width: 100%;
-                height: 50ps;
+                width: 98%;
+                height: 40ps;
+                margin-left: 1%;
             }
             .emotion-bar-cell {
                 display: flex;
@@ -80,17 +81,17 @@ output as many thoughts are are relevant to the input:
                 justify-content: center;
                 align-items: center;
                 width: 100px;
-                height: 50ps;
+                height: 40ps;
                 padding: 0.5em;
                 box-sizing: border-box;
             }
             .emotion-bar-cell-name {
-                font-size: 0.8em;
+                font-size: 0.7em;
                 font-weight: bold;
                 text-align: center;
             }
             .emotion-bar-cell-value {
-                font-size: 0.8em;
+                font-size: 0.7em;
                 font-weight: bold;
                 text-align: center;
             }
@@ -103,7 +104,6 @@ output as many thoughts are are relevant to the input:
         `}createEmotionDiv(k,m){return`<style>${this.style()}</style><div class="emotion-bar-cell" style="background-color: ${this.emotionColor(k)};">
             <div class="emotion-bar-cell-name">${k}</div>
             <div class="emotion-bar-cell-value">${m}</div>
-            <div class="emotion-bar-cell-bar"></div>
         </div>`}updateEmotionBar(){if(this.element){this.element.innerHTML="";for(let k in this.emotions)this.element.innerHTML+=this.createEmotionDiv(k,this.emotions[k])}}updateEmotion(k,m){this.emotions[k]=m,this.updateEmotionBar()}emotionColor(k){let m=this.emotions[k],s=Math.round(m*255/10),u=Math.round((10-m)*255/10);return`rgb(${s}, ${u}, 0)`}}class Dr{constructor(k,m,s,u){ce(this,"defaultOptions",{showSendButton:!0,showTypingIndicator:!0,showChatHistory:!0});ce(this,"users",[]);ce(this,"userIdx",0);ce(this,"callback");ce(this,"options",{});ce(this,"editor");ce(this,"history",[]);ce(this,"element",null);ce(this,"emotionBar",null);if(k instanceof HTMLElement?this.element=k:this.element=document.getElementById(k),this.element&&(this.element.innerHTML=`
                 <div id="chat-container">
                 <style>${this.css()}</style>
@@ -137,39 +137,48 @@ output as many thoughts are are relevant to the input:
 			display: flex;
 			flex-direction: column;
 			height: 100%;
-			width: 100%;
+			width: 80%;
 			background-color: #fff;
-			border: 1px solid #ccc;
+			border: 1px solid #333;
+            margin: 10px;
 			border-radius: 5px;
 			overflow: hidden;
 		}
         .chat-internals {
             display: flex;
             flex-direction: row;
-            height: 100%;
-            width: 100%;
+            height: 80%;
+            width: 99%;
             background-color: #fff;
-            border: 1px solid #ccc;
+            border: 1px solid #333;
+            margin: 5px;
             border-radius: 5px;
+            margin: 5px;
         }
         .internals-panel {
             flex: 1;
             padding: 10px;
             overflow-y: scroll;
-            background-color: #fff;
-            min-height: 140px;
-            max-height: 140px;
-            font-size: 6px;
+            background-color: #eee;
+            border: 1px solid #333;
+            margin: 5px;
+            border-radius: 5px;
+            min-height: 80px;
+            max-height: 80px;
+            font-size: 8px;
+            margin: 5px;
+            overflow: scroll-y;
         }
 		.chat-history {
 			flex: 1;
 			padding: 10px;
 			overflow-y: scroll;
 			background-color: #fff;
+            max-height: 80%;
 		}
 		.chat-message {
             background-color: #fff;
-			border: 1px solid #ccc;
+			border: 1px solid #333;
 			border-radius: 5px;
 			margin-bottom: 10px;
             padding:10px;
@@ -212,10 +221,16 @@ output as many thoughts are are relevant to the input:
 		}
 		.text-input .ql-container {
 			border: none;
-		}`}createQuill(){if(!this.element)return;const k=this.element.querySelector("#editor");k&&(this.options.quill={modules:{toolbar:{container:"#toolbar",handlers:{image:()=>{const m=this.editor.getSelection(),s=prompt("What is the image URL");s&&this.editor.insertEmbed(m.index,"image",s,ot.sources.USER)}}},keyboard:{bindings:{shift_enter:{key:13,shiftKey:!0,handler:(m,s)=>this.editor.insertText(m.index,`
+		}
+        .ql-editor {
+            min-height: 100px;
+            max-height: 100px;
+            border: 1px solid #333;
+            border-radius: 5px;
+        }`}createQuill(){if(!this.element)return;const k=this.element.querySelector("#editor");k&&(this.options.quill={modules:{toolbar:{container:"#toolbar",handlers:{image:()=>{const m=this.editor.getSelection(),s=prompt("What is the image URL");s&&this.editor.insertEmbed(m.index,"image",s,ot.sources.USER)}}},keyboard:{bindings:{shift_enter:{key:13,shiftKey:!0,handler:(m,s)=>this.editor.insertText(m.index,`
 `)},enter:{key:13,handler:()=>this.sendMessage(this.editor.getText(),this.users[1])}}}},placeholder:"Enter your message...",theme:"snow"},this.editor=new ot(k,this.options.quill))}sendMessage(k,m){m||(m=this.users[1]),k&&(this.editor.setText(""),this.typing(!0),this.callback(k,m,this))}respond(k,m){if(m||(m=this.users[0]),k instanceof Array){k.forEach(s=>this.respond(s,m));return}this.addChatMessage(m,k)}}window.mind=new Mr({},R=>window.microChat.addChatMessage(R.agent||"Agent",R.text));let it=["Anger","Fear","Joy","Sadness","Disgust"].map(R=>new Kt({emotion:R}));it.forEach(R=>window.mind.addAgent(R));it=["detail-oriented","holistic","analytical"].map(R=>new Kt({style:R,preamble:`Apply your ${R} cognition with an intensity level of {intensity} out of 10 to answer the following question.  Given the following chat history:
 {chathistory}
 Answer the following question:
 {query}
 and provide a new cognition intensity between 1 and 10 based on the contents of the chat and your response. Answer on A SINGLE LINE ONLY using a JSON object with the following format: { "agent": "${R}", "intensity": 8, "text": "Answer" }
-{ "agent": "${R}", "intensity": `}));it.forEach(R=>window.mind.addAgent(R));window.mind.setStateValue("intensity",3);window.microChat=new Dr("app",["Agent","Human"],async(R,k,m)=>{if(R=R.trim(),!Qe){Qe=R,window.microChat.setNotification("Great! You're all set to start chatting with the AI.");return}if(m.getNotification().includes(R)||m.respond(R,k),k==="Human"){await window.mind.setChatHistory(m.getTranscript(1));let s=await window.mind.generateResponse(R);Array.isArray(s)?s.map(v=>JSON.parse(v)).forEach(v=>m.respond(v.text,v.agent||"AI")):m.respond(s.text,s.agent||"Agent");const u=await window.mind.getStateValues("intensity"),E=await window.mind.getStateValues("emotion"),A=await window.mind.getStateValues("style"),_=E.map((v,p)=>({agent:A[p]||v,intensity:u[p]}));window.microChat.clearPanel("internal"),_.forEach(v=>{m.addToPanel("internal",`${v.agent} intensity: ${v.intensity}`),m.emotionBar.updateEmotion(v.agent.toLowerCase(),v.intensity)}),setTimeout(()=>Vt(),3e4)}},{showSendButton:!0,showTypingIndicator:!0,showChatHistory:!0,history:[{message:"intelligent sentient interface - type anything to discuss any topic."}],emotions:{anger:3,fear:3,joy:3,sadness:3,disgust:3,"detail-oriented":3,holistic:3,analytical:3}});window.microChat.setNotification("Enter your OpenAI API key in the chat input to get started.");function Pt(R){try{return JSON.parse(R).text}catch{return R}}let We;function Vt(){const R=window.microChat.getTranscript(0);window.mind.daydream(R).then(k=>{window.microChat.clearPanel("history"),Array.isArray(k)?k.forEach(m=>{window.microChat.appendNotification(Pt(m))}):window.microChat.setNotification(Pt(k)),We&&clearTimeout(We),We=setTimeout(()=>Vt(),Math.random()*6e4)})}
+{ "agent": "${R}", "intensity": `}));it.forEach(R=>window.mind.addAgent(R));window.mind.setStateValue("intensity",3);window.microChat=new Dr("app",["Agent","Human"],async(R,k,m)=>{if(R=R.trim(),!Qe){Qe=R,window.microChat.setNotification("Great! You're all set to start chatting with the AI.");return}if(m.getNotification().includes(R)||m.respond(R,k),k==="Human"){await window.mind.setChatHistory(m.getTranscript(1));let s=await window.mind.generateResponse(R);Array.isArray(s)?s.map(v=>JSON.parse(v)).forEach(v=>m.respond(v.text,v.agent||"AI")):m.respond(s.text,s.agent||"Agent");const u=await window.mind.getStateValues("intensity"),E=await window.mind.getStateValues("emotion"),A=await window.mind.getStateValues("style"),_=E.map((v,p)=>({agent:A[p]||v,intensity:u[p]}));window.microChat.clearPanel("internal"),_.forEach(v=>{m.addToPanel("internal",`${v.agent} intensity: ${v.intensity}`),m.emotionBar.updateEmotion(v.agent.toLowerCase(),v.intensity)}),setTimeout(()=>Vt(),3e4)}},{showSendButton:!0,showTypingIndicator:!0,showChatHistory:!0,history:[{message:"intelligent sentient interface - type anything in the text box below to discuss any topic."}],emotions:{anger:3,fear:3,joy:3,sadness:3,disgust:3,"detail-oriented":3,holistic:3,analytical:3}});window.microChat.setNotification("Enter your OpenAI API key in the chat input at the bottom of this page to get started.");function Pt(R){try{return JSON.parse(R).text}catch{return R}}let We;function Vt(){const R=window.microChat.getTranscript(0);window.mind.daydream(R).then(k=>{window.microChat.clearPanel("history"),Array.isArray(k)?k.forEach(m=>{window.microChat.appendNotification(Pt(m))}):window.microChat.setNotification(Pt(k)),We&&clearTimeout(We),We=setTimeout(()=>Vt(),Math.random()*6e4)})}
